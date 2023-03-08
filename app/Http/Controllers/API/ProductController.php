@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
@@ -37,9 +38,17 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+        $params = $request->validated();
+        if ($product = Product::create($params)) {
+            $product->categories()->sync($params['category_ids']);
+
+            return response()->json([
+                'message' => "Produk baru berhasil di tambahkan",
+                'product' => $product
+            ], 200);        
+        }
     }
 
     /**
