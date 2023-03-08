@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Requests\CategoryRequest;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 
@@ -36,9 +38,17 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $params = $request->validated();
+        if ($category = Category::create($params)) {
+
+            return response()->json([
+                'status' => true,
+                'message' => "Kategori baru berhasil ditambahkan",
+                'categories' => $category
+            ], 200);        
+        }
     }
 
     /**
