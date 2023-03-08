@@ -84,9 +84,20 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $params = $request->validated();
+
+        if ($product->update($params)) {
+            $product->categories()->sync($params['category_ids']);
+
+            return response()->json([
+                'status' => true,
+                'message' => "Produk berhasil diubah",
+                'product' => $product
+            ], 200);        
+        }
     }
 
     /**
