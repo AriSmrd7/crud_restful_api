@@ -45,6 +45,7 @@ class ProductController extends Controller
             $product->categories()->sync($params['category_ids']);
 
             return response()->json([
+                'status' => true,
                 'message' => "Produk baru berhasil di tambahkan",
                 'product' => $product
             ], 200);        
