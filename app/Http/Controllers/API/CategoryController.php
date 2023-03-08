@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\CategoryRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -83,9 +83,18 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $params = $request->validated();
+
+        if ($category->update($params)) {
+            return response()->json([
+                'status' => true,
+                'message' => "Kategori berhasil di update",
+                'category' => $category
+            ], 200);        
+        }
     }
 
     /**
